@@ -6,6 +6,9 @@
  * - Use position: relative for the card container
  * - Add perspective for 3D flip effect
  * - Include transition for smooth animation
+ * - Create styles for suit symbols in different colors:
+ *   * Hearts/Diamonds: red
+ *   * Clubs/Spades: black
 
 /* 2. Card Faces
  * - Style both front and back faces:
@@ -16,7 +19,9 @@
  *   * Use different background colors/patterns for front and back
  * - Front face:
  *   * Display suit and value clearly
- *   * Use appropriate text styling
+ *   * Style top-left and bottom-right corners with value and suit
+ *   * Create large center suit symbol
+ *   * Style face cards (J, Q, K) differently if needed
  * - Back face:
  *   * Create a card back design
  *   * Apply rotateY(180deg) transform initially
@@ -33,15 +38,32 @@
  *   * Set max-width to prevent cards from spreading too wide
  * - Add container margins and padding
 
-/* 5. Shuffle Button
+/* 5. Card Shoe Styling
+ * - Create a visual representation of the shoe
+ *   * Use perspective and 3D transforms for realism
+ *   * Add slight rotation for better visibility
+ * - Style the remaining cards indicator
+ * - Add hover effects for the draw button
+ * - Include transition for cards being drawn
+
+/* 6. Card Hand Styling
+ * - Create a semi-circular or fan layout for cards in hand
+ * - Use transform: rotate() and transform-origin for fanning effect
+ * - Implement proper z-index for overlapping cards
+ * - Add hover effect to slightly raise hovered card
+
+/* 7. Shuffle Button & Animation
  * - Style button with appropriate:
  *   * Padding and margins
  *   * Background and text colors
  *   * Hover effects
  *   * Cursor: pointer
  * - Position button above or below the deck
-
-/* 6. Animation Effects (Optional)
- * - Add keyframes for shuffle animation
+ * - Create keyframes for shuffle animation
  * - Include transition effects for card movements
+
+/* 8. Draw Animation
+ * - Create animation for cards moving from shoe to hand
+ * - Add transition for smooth movement
+ * - Include slight rotation during draw motion
  */

@@ -11,12 +11,30 @@
 
 <!-- 2. Body Structure
      - Create a main container for the application
-     - Add a header with title if desired
-     - Insert the custom <card-deck> element
-     - Place any additional UI elements or instructions
+     - Add a header with title (e.g., "Card Game Components")
+     - Create a game area that includes:
+       * A card-shoe element for drawing cards
+       * A card-deck element for displaying the deck
+       * A card-hand element for the player's hand
+     - Add control buttons:
+       * Shuffle button
+       * Draw button
+       * Reset button
      - Include script tag linking to scripts/components.js at the end of body -->
 
-<!-- 3. Notes:
+<!-- 3. Card Components Structure
+     - <card-shoe> element with attributes for:
+       * number-of-decks (default: 1)
+       * id for accessing the shoe
+     - <card-deck> element with:
+       * id for accessing the deck
+       * attributes for customization
+     - <card-hand> element with:
+       * id for the player's hand
+       * attributes for hand size and layout -->
+
+<!-- 4. Notes:
      - Don't add any additional libraries or frameworks
      - Keep the HTML structure minimal and semantic
-     - Let the Web Components handle most of the rendering -->
+     - Let the Web Components handle most of the rendering
+     - Ensure proper hierarchy for game elements -->
