@@ -1,40 +1,84 @@
-<!-- HTML STRUCTURE INSTRUCTIONS -->
+<!-- Index page for blackjack game -->
 
-<!-- 1. Document Setup
-     - Create DOCTYPE declaration
-     - Add html tag with lang attribute
-     - Set up head section with:
-       * Character encoding (UTF-8)
-       * Viewport meta tag
-       * Page title
-       * Link to CSS file in styles/main.css -->
+<!DOCTYPE html>
 
-<!-- 2. Body Structure
-     - Create a main container for the application
-     - Add a header with title (e.g., "Card Game Components")
-     - Create a game area that includes:
-       * A card-shoe element for drawing cards
-       * A card-deck element for displaying the deck
-       * A card-hand element for the player's hand
-     - Add control buttons:
-       * Shuffle button
-       * Draw button
-       * Reset button
-     - Include script tag linking to scripts/components.js at the end of body -->
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Blackjack Game</title>
+        <link rel="stylesheet" href="../style/main.css">
+    </head>
 
-<!-- 3. Card Components Structure
-     - <card-shoe> element with attributes for:
-       * number-of-decks (default: 1)
-       * id for accessing the shoe
-     - <card-deck> element with:
-       * id for accessing the deck
-       * attributes for customization
-     - <card-hand> element with:
-       * id for the player's hand
-       * attributes for hand size and layout -->
+    <body>
+        <header>
+            Blackjack
+        </header>
 
-<!-- 4. Notes:
-     - Don't add any additional libraries or frameworks
-     - Keep the HTML structure minimal and semantic
-     - Let the Web Components handle most of the rendering
-     - Ensure proper hierarchy for game elements -->
+        <main>
+            
+
+
+            <div class="dealer">
+                <div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+<div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+<div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+<div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+            </div>
+            <div class="table-divider">
+                DEALER MUST DRAW TO 16 and STAND ON ALL 17s
+            </div>
+            <div class="hand">
+                <div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+<div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+<div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+<div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+<div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+<div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+<div
+  class="card face"
+  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+></div>
+
+            </div>
+            
+
+        </main>
+
+        <footer>
+            
+        </footer>
+        
+    </body>
+
+</html>
