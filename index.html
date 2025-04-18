@@ -19,8 +19,7 @@
             <!-- Shuffling container here -->
             <div class="shuffling-container"></div>
 
-            <!-- Card components -->
-            <card-shoe id="main-shoe" deck-count="6" class="card-shoe"></card-shoe>
+            <!-- Card deck component -->
             <card-deck id="main-deck"></card-deck>
 
             <!-- Control buttons here -->
@@ -54,9 +53,8 @@
                 DEALER MUST DRAW TO 16 and STAND ON ALL 17s
             </div>
             
-            <!-- Replace static cards with card-hand component -->
-            <card-hand id="player-hand" class="hand"></card-hand>
-            
+            <!-- Player's hand -->
+            <div id="player-hand" class="hand"></div>
 
         </main>
 
@@ -70,8 +68,7 @@
             // Connect components after they're loaded
             document.addEventListener('DOMContentLoaded', () => {
                 const deck = document.getElementById('main-deck');
-                const hand = document.getElementById('player-hand');
-                const shoe = document.getElementById('main-shoe');
+                const playerHand = document.getElementById('player-hand');
                 
                 // Connect shuffle button
                 document.getElementById('shuffle-btn').addEventListener('click', () => {
@@ -80,16 +77,16 @@
                 
                 // Connect draw button
                 document.getElementById('draw-btn').addEventListener('click', async () => {
-                    deck.drawToHand(hand, 1);
+                    deck.drawCard(playerHand);
                 });
                 
                 // Connect deal button
                 document.getElementById('deal-btn').addEventListener('click', async () => {
                     // Clear hand first
-                    hand.innerHTML = '';
-                    hand.cards = [];
+                    playerHand.innerHTML = '';
                     // Deal 2 cards
-                    deck.drawToHand(hand, 2);
+                    deck.drawCard(playerHand);
+                    deck.drawCard(playerHand);
                 });
             });
         </script>

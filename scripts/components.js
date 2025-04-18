@@ -56,9 +56,9 @@
 
 // - Register all components with customElements.define()
 
-// Card Deck Web Components with API Integration
+// Card Deck Web Components with API Integration - Simplified Version
 
-// PlayingCard Component
+// PlayingCard Component - Handles individual cards and flip animation
 class PlayingCard extends HTMLElement {
     constructor() {
         super();
@@ -91,16 +91,7 @@ class PlayingCard extends HTMLElement {
             return;
         }
 
-        // Otherwise fall back to generating the card
-        const suitSymbol = {
-            'HEARTS': '♥',
-            'DIAMONDS': '♦',
-            'CLUBS': '♣',
-            'SPADES': '♠'
-        }[this.suit] || '♥';
-
-        const color = (this.suit === 'HEARTS' || this.suit === 'DIAMONDS') ? 'red' : 'black';
-
+        // Otherwise fall back to generating the card with API images
         this.innerHTML = `
             <div class="card">
                 <div class="card face" style="--card-face:url('https://deckofcardsapi.com/static/img/${this.code}.svg');">
@@ -111,7 +102,7 @@ class PlayingCard extends HTMLElement {
     }
 }
 
-// CardDeck Component using Deck of Cards API
+// CardDeck Component - Handles deck creation and shuffle animation
 class CardDeck extends HTMLElement {
     constructor() {
         super();
@@ -189,50 +180,39 @@ class CardDeck extends HTMLElement {
         }
     }
 
-    async drawCards(count = 1) {
-        if (!this.deckId || this.remaining < count) {
+    async drawCard(targetElement) {
+        if (!this.deckId || this.remaining < 1) {
             console.error('Not enough cards remaining');
-            return [];
+            return null;
         }
         
         try {
-            // Call the API to draw cards
-            const response = await fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/draw/?count=${count}`);
+            // Call the API to draw a card
+            const response = await fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/draw/?count=1`);
             const data = await response.json();
             
-            if (data.success) {
+            if (data.success && data.cards.length > 0) {
                 this.remaining = data.remaining;
-                console.log(`Drew ${count} cards. Remaining: ${this.remaining}`);
                 this.render(); // Update card count display
-                return data.cards;
+                
+                const card = data.cards[0];
+                
+                // If target element provided, add the card to it
+                if (targetElement) {
+                    const cardElement = document.createElement('div');
+                    cardElement.classList.add('card', 'face', 'card-drawn');
+                    cardElement.style.setProperty('--card-face', `url('${card.images.svg}')`);
+                    targetElement.appendChild(cardElement);
+                }
+                
+                return card;
             } else {
-                console.error('Failed to draw cards');
-                return [];
+                console.error('Failed to draw card');
+                return null;
             }
         } catch (error) {
-            console.error('Error drawing cards:', error);
-            return [];
-        }
-    }
-
-    async drawToHand(handElement, count = 1) {
-        const cards = await this.drawCards(count);
-        
-        if (cards.length > 0 && handElement) {
-            cards.forEach(card => {
-                // Create card element and add to hand
-                const cardElement = document.createElement('div');
-                cardElement.classList.add('card', 'face', 'card-drawn');
-                cardElement.style.setProperty('--card-face', `url('${card.images.svg}')`);
-                
-                // Add to hand
-                handElement.appendChild(cardElement);
-                
-                // If hand has an addCard method, call it
-                if (typeof handElement.addCard === 'function') {
-                    handElement.addCard(card);
-                }
-            });
+            console.error('Error drawing card:', error);
+            return null;
         }
     }
 
@@ -245,104 +225,6 @@ class CardDeck extends HTMLElement {
     }
 }
 
-// CardHand Component
-class CardHand extends HTMLElement {
-    constructor() {
-        super();
-        this.cards = [];
-    }
-
-    connectedCallback() {
-        this.render();
-    }
-
-    addCard(card) {
-        this.cards.push(card);
-    }
-
-    removeCard(index) {
-        if (index >= 0 && index < this.cards.length) {
-            this.cards.splice(index, 1);
-            this.render();
-        }
-    }
-
-    render() {
-        // Empty hand is handled by the parent HTML
-    }
-}
-
-// CardShoe Component (for multiple decks)
-class CardShoe extends HTMLElement {
-    constructor() {
-        super();
-        this.deckCount = parseInt(this.getAttribute('deck-count') || '6');
-        this.deckId = null;
-        this.remaining = 0;
-    }
-
-    async connectedCallback() {
-        await this.createShoe();
-        this.render();
-    }
-
-    async createShoe() {
-        try {
-            // Create a new shuffled shoe with multiple decks
-            const response = await fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=${this.deckCount}`);
-            const data = await response.json();
-            
-            if (data.success) {
-                this.deckId = data.deck_id;
-                this.remaining = data.remaining;
-                console.log(`New shoe created with ${this.deckCount} decks. ID: ${this.deckId}`);
-            } else {
-                console.error('Failed to create shoe');
-            }
-        } catch (error) {
-            console.error('Error creating shoe:', error);
-        }
-    }
-
-    async draw() {
-        if (!this.deckId || this.remaining < 1) {
-            console.error('No cards remaining in shoe');
-            return null;
-        }
-        
-        try {
-            const response = await fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/draw/?count=1`);
-            const data = await response.json();
-            
-            if (data.success && data.cards.length > 0) {
-                this.remaining = data.remaining;
-                this.render();
-                return data.cards[0];
-            } else {
-                console.error('Failed to draw card');
-                return null;
-            }
-        } catch (error) {
-            console.error('Error drawing card:', error);
-            return null;
-        }
-    }
-
-    remaining() {
-        return this.remaining;
-    }
-
-    render() {
-        this.innerHTML = `
-            <div class="deck">
-                <div class="shoe-count">Cards: ${this.remaining}</div>
-            </div>
-        `;
-    }
-}
-
-// Register custom elements
+// Register just the essential custom elements
 customElements.define('playing-card', PlayingCard);
 customElements.define('card-deck', CardDeck);
-customElements.define('card-hand', CardHand);
-customElements.define('card-shoe', CardShoe);
