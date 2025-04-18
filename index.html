@@ -16,9 +16,22 @@
         </header>
 
         <main>
-            
+            <!-- Shuffling container here -->
+            <div class="shuffling-container"></div>
 
+            <!-- Card components -->
+            <card-shoe id="main-shoe" deck-count="6" class="card-shoe"></card-shoe>
+            <card-deck id="main-deck"></card-deck>
 
+            <!-- Control buttons here -->
+            <div class="controls">
+                <button class="button" id="deal-btn">Deal</button>
+                <button class="button" id="hit-btn">Hit</button>
+                <button class="button" id="stand-btn">Stand</button>
+                <button class="button" id="shuffle-btn">Shuffle</button>
+                <button class="button" id="draw-btn">Draw</button>
+            </div>
+        
             <div class="dealer">
                 <div
   class="card face"
@@ -40,37 +53,9 @@
             <div class="table-divider">
                 DEALER MUST DRAW TO 16 and STAND ON ALL 17s
             </div>
-            <div class="hand">
-                <div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-
-            </div>
+            
+            <!-- Replace static cards with card-hand component -->
+            <card-hand id="player-hand" class="hand"></card-hand>
             
 
         </main>
@@ -79,6 +64,35 @@
             
         </footer>
         
+        <!-- Add our script after the body content -->
+        <script src="scripts/components.js"></script>
+        <script>
+            // Connect components after they're loaded
+            document.addEventListener('DOMContentLoaded', () => {
+                const deck = document.getElementById('main-deck');
+                const hand = document.getElementById('player-hand');
+                const shoe = document.getElementById('main-shoe');
+                
+                // Connect shuffle button
+                document.getElementById('shuffle-btn').addEventListener('click', () => {
+                    deck.shuffle();
+                });
+                
+                // Connect draw button
+                document.getElementById('draw-btn').addEventListener('click', async () => {
+                    deck.drawToHand(hand, 1);
+                });
+                
+                // Connect deal button
+                document.getElementById('deal-btn').addEventListener('click', async () => {
+                    // Clear hand first
+                    hand.innerHTML = '';
+                    hand.cards = [];
+                    // Deal 2 cards
+                    deck.drawToHand(hand, 2);
+                });
+            });
+        </script>
     </body>
 
 </html>

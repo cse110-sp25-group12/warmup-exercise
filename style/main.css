@@ -49,8 +49,8 @@ header{
 .table-divider{
     /* position: relative;*/
     /* top: 50%; */
-    /* left: 50%; */
-    /* transform: translate(-50%, -50%); */
+    /* left: 50%;
+    transform: translate(-50%, -50%); */
     /*width: max-content;
     background-color: var(--bj-yel);
     color: black;
@@ -248,3 +248,203 @@ main {
     font-family: "Casino", sans-serif;
 }
 .button:hover { background: var(--bj-yel); }
+
+/* The Shuffling Animation */
+@keyframes shuffleCard {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    25% { transform: translate(1vw, -1.5vw) rotate(15deg) scale(1.05); }
+    50% { transform: translate(-1vw, 1vw) rotate(-15deg) scale(1.1); }
+    75% { transform: translate(0.5vw, -0.5vw) rotate(5deg) scale(1.05); }
+    100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+}
+.shuffling-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    display: none;
+}
+.shuffling-card {
+    position: absolute;
+    width: var(--card-width);
+    height: var(--card-height);
+    background: url('https://deckofcardsapi.com/static/img/back.png') center/cover; /* Need the new url for the photo of the back of the card */
+    border-radius: var(--card-border-radius);
+    animation:
+        shuffleCard 0.8s ease-in-out infinite,
+        float 1s ease-in-out infinite alternate;
+    box-shadow: 0 0.3vw 0.5vw rgba(0,0,0,0.3);
+}
+@keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-1vw); }
+}
+
+/* The card draw animation */
+@keyframes drawCard {
+    0% {
+        transform: translate(-15vw, -10vw) rotate(-15deg) scale(0.8);
+        opacity: 0;
+        z-index: 20;
+    }
+    50% {
+        transform: translate(0, -2vw) rotate(5deg) scale(1.05);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0) rotate(0) scale(1);
+        z-index: 1;
+    }
+}
+.card-drawn {
+    animation: drawCard 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* The card flip animation */
+.card {
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+    position: relative;
+}
+.card-face, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: var(--card-border-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-back {
+    background: url('https://deckofcardsapi.com/static/img/back.png') center/cover; /* Need to update url to our own card back */
+    transform: rotateY(0deg);
+}
+.card-face {
+    background: white;
+    transform: rotateY(180deg);
+}
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+/* Card shoe place holder for current */
+.card-shoe {
+    position: absolute;
+    top: 30%;
+    left: 5%;
+    width: var(--card-width);
+    height: var(--card-height);
+    z-index: 10;
+}
+.deck {
+    width: 100%;
+    height: 100%;
+    background: url('https://deckofcardsapi.com/static/img/back.png') center/cover; /* Need to update to our own card back */
+    border-radius: var(--card-border-radius);
+    border: var(--card-border);
+    box-shadow:
+        0 0.3vw 0 rgba(0,0,0,0.3),
+        0 0 0 0.5vw rgba(0,0,0,0.1);
+}
+
+/* Component containers */
+card-deck, card-hand, card-shoe {
+  display: block;
+  position: relative;
+  margin: 1rem auto;
+  width: fit-content;
+}
+
+/* Controls and button positioning */
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  z-index: 20;
+  position: relative;
+}
+
+/* Custom button styling for component buttons to match .button class */
+#shuffle-btn, #draw-btn {
+  padding: 0.75rem 1.5rem;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+  font-family: "Casino", sans-serif;
+}
+
+#shuffle-btn:hover, #draw-btn:hover {
+  background: var(--bj-yel);
+}
+
+/* Position deck component */
+card-deck {
+  position: absolute;
+  top: 45%;
+  right: 5%;
+  z-index: 10;
+}
+
+/* Position card-shoe component */
+card-shoe {
+  position: absolute;
+  top: 45%;
+  left: 5%;
+  width: var(--card-width);
+  height: var(--card-height);
+  z-index: 10;
+}
+
+/* Position card-hand component to match existing .hand class */
+card-hand {
+  position: relative;
+  bottom: 0;
+  width: fit-content;
+  min-width: var(--card-width);
+  height: calc(var(--card-height) + 3vh);
+  border: 0.25vw solid var(--bj-yel);
+  border-radius: 0.75vw;
+  padding-inline: 1vw;
+  margin: 1rem auto;
+  margin-bottom: 10vh;
+}
+
+/* Container for deck button and cards */
+.deck-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Container for shoe button and cards */
+.shoe-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-count, .shoe-count {
+  color: white;
+  font-size: 0.8rem;
+  text-shadow: 1px 1px 2px black;
+  margin-top: 0.5rem;
+}
+
+/* Make consistent card size and spacing in hand */
+.card-hand {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+    
