@@ -229,9 +229,10 @@ main {
     perspective: 1000px;
     cursor: pointer;
     margin: 0.25vw;
+    overflow: hidden;
 }
 .card.face:hover {
-    transform: perspective(600px) rotateY(10deg);
+    transform: perspective(600px) rotateY(15deg);
 }
 .card.face{
     background-image: var(--card-face);

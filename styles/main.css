@@ -1,0 +1,69 @@
+/* CSS STYLING INSTRUCTIONS
+
+/* 1. Card Styling
+ * - Set fixed width and height for cards (e.g., 100px x 150px)
+ * - Add margins between cards
+ * - Use position: relative for the card container
+ * - Add perspective for 3D flip effect
+ * - Include transition for smooth animation
+ * - Create styles for suit symbols in different colors:
+ *   * Hearts/Diamonds: red
+ *   * Clubs/Spades: black
+
+/* 2. Card Faces
+ * - Style both front and back faces:
+ *   * Use position: absolute to overlay them
+ *   * Set width and height to 100%
+ *   * Add backface-visibility: hidden to hide the back during flips
+ *   * Set border-radius for rounded corners
+ *   * Use different background colors/patterns for front and back
+ * - Front face:
+ *   * Display suit and value clearly
+ *   * Style top-left and bottom-right corners with value and suit
+ *   * Create large center suit symbol
+ *   * Style face cards (J, Q, K) differently if needed
+ * - Back face:
+ *   * Create a card back design
+ *   * Apply rotateY(180deg) transform initially
+
+/* 3. Flip Animation
+ * - Create .flipped class that:
+ *   * Applies rotateY(180deg) transform to the card
+ *   * Ensures smooth transition with transition property
+
+/* 4. Deck Layout
+ * - Use flexbox or grid for responsive layout
+ *   * flex-wrap: wrap to handle multiple rows
+ *   * Center alignment
+ *   * Set max-width to prevent cards from spreading too wide
+ * - Add container margins and padding
+
+/* 5. Card Shoe Styling
+ * - Create a visual representation of the shoe
+ *   * Use perspective and 3D transforms for realism
+ *   * Add slight rotation for better visibility
+ * - Style the remaining cards indicator
+ * - Add hover effects for the draw button
+ * - Include transition for cards being drawn
+
+/* 6. Card Hand Styling
+ * - Create a semi-circular or fan layout for cards in hand
+ * - Use transform: rotate() and transform-origin for fanning effect
+ * - Implement proper z-index for overlapping cards
+ * - Add hover effect to slightly raise hovered card
+
+/* 7. Shuffle Button & Animation
+ * - Style button with appropriate:
+ *   * Padding and margins
+ *   * Background and text colors
+ *   * Hover effects
+ *   * Cursor: pointer
+ * - Position button above or below the deck
+ * - Create keyframes for shuffle animation
+ * - Include transition effects for card movements
+
+/* 8. Draw Animation
+ * - Create animation for cards moving from shoe to hand
+ * - Add transition for smooth movement
+ * - Include slight rotation during draw motion
+ */
