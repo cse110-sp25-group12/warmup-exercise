@@ -1,54 +1,249 @@
 @import url('https://fonts.cdnfonts.com/css/casino');
 
-:root{
-    --card-width: 12rem;
-    --card-height: var(--card-width) * 1.4;
-    --card-border-radius: 0.12rem;
-    --card-border: 0.0125rem solid #444;
+/* :root{
+    --card-width: 12vw;
+    --card-height: calc(var(--card-width) * 1.4);
+    --card-border-radius: 1vw;
+    --card-border: 0.25vw solid #000000;
     --system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     --bj-yel: rgb(255, 217, 0);
 }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 
 body{
     font-family: var(--system-ui);
     margin: 0.5rem;
     padding: 0;
     overflow: hidden;
-    background-color: #327932;
+    background-color: #085c25f8;
+    background-image: url("https://www.transparenttextures.com/patterns/felt.png");
+    background-size: 25% 25%;
+    background-blend-mode: multiply;
+    background-repeat: repeat;
+    border: 0.35rem solid var(--bj-yel);
+    border-radius: 0.75rem;
+    display: flex;
+    height: calc(100dvh - 1rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+header{
+    display: flex;
+    position: absolute;
+    top: 0;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 4vw;
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 0px #000;
+    font-size: 2vw;
+    font-family: "Casino", sans-serif;
+    font-weight: 400;
+    padding: 1rem 0;
+}
+.table-divider{
+    /* position: relative;*/
+    /* top: 50%; */
+    /* left: 50%; */
+    /* transform: translate(-50%, -50%); */
+    /*width: max-content;
+    background-color: var(--bj-yel);
+    color: black;
+    font-weight: 100;
+    font-size: 2.5vw;
+    font-family: "Casino Flat Shadow", sans-serif;
+    border-radius: 4vw;
+    padding-inline: 2vw;
+    padding-top: 0.75vw;
+    border: 0.15vw solid black;
+    display: flex;
+    flex: 1;
+
+}
+
+.hand, .dealer{
+    /* position:absolute;
+    top: 77.5%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+    /*width: max-content;
+    height: calc(var(--card-height) + 3vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0.25vw solid var(--bj-yel);
+    border-radius: 0.75vw;
+    padding-inline: 1vw;
+    min-width: var(--card-width);
+    transition: all 0.2s ease-in-out;
+
+}
+
+
+
+.card.face, .card.back{
+    width: var(--card-width);
+    height: var(--card-height);
+    border: var(--card-border);
+    border-radius: var(--card-border-radius);
+    background-size: 350% 350%;
+    background-position: center;
+    box-shadow: 0.3vw 0.3vh 0.25vw rgba(0,0,0,0.3);
+    transition: all 0.2s ease-in-out;
+    transform: rotateY(0deg);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    cursor: pointer;
+    display: flex;
+    margin: 0.25vw;
+}
+
+.card.face:hover {
+    transform: perspective(600px) rotateY(10deg);
+}
+
+.card.face{
+    background-image: var(--card-face);
+}
+ */
+
+
+:root{
+    --card-width: 12vw;
+    --card-height: calc(var(--card-width) * 1.4);
+    --card-border-radius: 1vw;
+    --card-border: 0.25vw solid #000000;
+    --system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --bj-yel: rgb(255, 217, 0);
+}
+body{
+    font-family: var(--system-ui);
+    margin-top: 5vh;
+    padding: 0;
+    overflow: hidden;
+    background-color: #085c25f8;
+    background-image: url("https://www.transparenttextures.com/patterns/felt.png");
+    background-size: 25% 25%;
+    background-blend-mode: multiply;
+    background-repeat: repeat;
     border: 0.35rem solid var(--bj-yel);
     border-radius: 0.75rem;
     box-sizing: border-box;
     display: flex;
-    height: calc(100dvh - 1rem);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100dvh - 10vh);
 }
 header{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 4vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 3rem;
     color: rgb(255, 255, 255);
     text-shadow: 1px 0px #000;
-    font-size: 2.5rem;
+    font-size: 2vw;
     font-family: "Casino", sans-serif;
     font-weight: 400;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    padding-top: 0.5vh
+}
+
+footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 4vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 0px #000;
+    font-size: 2vw;
+    font-family: "Casino", sans-serif;
+    font-weight: 400;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    padding-bottom: 0.5vh;
+}
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding-top: 5vw;
 }
 .table-divider{
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: max-content;
     background-color: var(--bj-yel);
     color: black;
     font-weight: 100;
-    font-size: 4vw;
-    font-family: "Casino 3D", sans-serif;
-    border: 1rem;
-    border-radius: 5vw;
+    font-size: 2.5vw;
+    font-family: "Casino Flat Shadow", sans-serif;
+    border-radius: 4vw;
     padding-inline: 2vw;
-    padding-top: 0.75vh;
-    
-
+    padding-top: 0.75vw;
+    border: 0.15vw solid black;
+    margin: 1% auto;
+}
+.hand,
+.dealer{
+    width: fit-content;
+    height: calc(var(--card-height) + 3vh);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0.25vw solid var(--bj-yel);
+    border-radius: 0.75vw;
+    padding-inline: 1vw;
+    transition: all 0.2s ease-in-out;
+    margin: 1rem auto;
+    min-width: var(--card-width);
+}
+.hand{
+    margin-bottom: 10vh;
 }
 
+.card.face,
+.card.back{
+    width: var(--card-width);
+    height: var(--card-height);
+    border: var(--card-border);
+    border-radius: var(--card-border-radius);
+    background-size: 350% 350%;
+    background-position: center;
+    box-shadow: 0.3vw 0.3vh 0.25vw rgba(0,0,0,0.3);
+    transition: all 0.2s ease-in-out;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    cursor: pointer;
+    margin: 0.25vw;
+}
+.card.face:hover {
+    transform: perspective(600px) rotateY(10deg);
+}
+.card.face{
+    background-image: var(--card-face);
+}
+.button {
+    padding: 0.75rem 1.5rem; 
+    background: #fff; color: #000;
+    border: none; 
+    border-radius: 0.5rem; 
+    cursor: pointer;
+    font-size: 1rem; 
+    transition: background 0.2s;
+    font-family: "Casino", sans-serif;
+}
+.button:hover { background: var(--bj-yel); }
