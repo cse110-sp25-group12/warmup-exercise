@@ -234,9 +234,41 @@ main {
 .card.face:hover {
     transform: perspective(600px) rotateY(15deg);
 }
+
 .card.face{
     background-image: var(--card-face);
+    animation: shuffle 0.6s ease-in-out infinite;
 }
+
+/* .card.face.shuffle {
+    animation: shuffle 0.6s ease-in-out infinite;
+  }
+=> needed for the js team in order to stop the process of shuffling
+*/
+
+  @keyframes shuffle {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 1;
+    }
+    30% {
+      transform: translateX(-40px) translateY(-20px) rotate(-15deg);
+      opacity: 0.7;
+    }
+    60% {
+      transform: translateX(40px) translateY(20px) rotate(15deg);
+      opacity: 0.7;
+    }
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 1;
+    }
+  }
+  
+  .card.face.shuffle {
+    animation: fancy-shuffle 1s ease-in-out infinite;
+  }
+
 .button {
     padding: 0.75rem 1.5rem; 
     background: #fff; color: #000;
