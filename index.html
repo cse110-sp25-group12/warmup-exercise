@@ -8,9 +8,35 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Blackjack Game</title>
         <link rel="stylesheet" href="../style/main.css">
+        <style>
+            /* Style for the music toggle button */
+            #music-toggle-btn {
+                position: fixed;
+                top: 15px;
+                right: 15px;
+                padding: 8px 12px;
+                font-size: 14px;
+                cursor: pointer;
+                background-color: rgba(255, 255, 255, 0.7);
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                z-index: 1000; /* Ensure it's above other content */
+            }
+            #music-toggle-btn:hover {
+                background-color: rgba(255, 255, 255, 0.9);
+            }
+        </style>
     </head>
 
     <body>
+        <!-- Add the audio element for background music -->
+        <audio id="background-music" src="https://vgmsite.com/soundtracks/balatro-2024/wxenwplroo/01.%20Main%20Theme.mp3" autoplay loop>
+            Your browser does not support the audio element.
+        </audio>
+
+        <!-- Add the music toggle button -->
+        <button id="music-toggle-btn">Mute Music</button>
+
         <header>
             Blackjack
         </header>
@@ -69,6 +95,32 @@
             document.addEventListener('DOMContentLoaded', () => {
                 const deck = document.getElementById('main-deck');
                 const playerHand = document.getElementById('player-hand');
+                const backgroundMusic = document.getElementById('background-music');
+                const musicToggleBtn = document.getElementById('music-toggle-btn');
+                
+                // --- Music Toggle Logic ---
+                if (musicToggleBtn && backgroundMusic) {
+                    // Set initial button text based on audio state (useful if autoplay fails)
+                    musicToggleBtn.textContent = backgroundMusic.paused ? 'Play Music' : 'Mute Music';
+
+                    musicToggleBtn.addEventListener('click', () => {
+                        if (backgroundMusic.paused) {
+                            backgroundMusic.play();
+                            musicToggleBtn.textContent = 'Mute Music';
+                        } else {
+                            backgroundMusic.pause();
+                            musicToggleBtn.textContent = 'Play Music';
+                        }
+                    });
+                    
+                    // Handle potential autoplay blocking by browsers
+                    backgroundMusic.play().catch(error => {
+                        console.log("Autoplay prevented: ", error);
+                        // Ensure button reflects the actual state
+                        musicToggleBtn.textContent = 'Play Music'; 
+                    });
+                }
+                // --- End Music Toggle Logic ---
                 
                 // Connect shuffle button
                 document.getElementById('shuffle-btn').addEventListener('click', () => {
