@@ -59,6 +59,22 @@ const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
 const numbers = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 const deck = [];
 
+
+//initialize deck
+initializeDeck()
+shuffleDeck()
+
+//Add event listeners to buttons
+const playerHitButton = document.querySelector(".player-hit");
+const dealerDrawButton = document.querySelector(".dealer-draw");
+if (playerHitButton) {
+  playerHitButton.addEventListener('click', addCardToHand);
+}
+if (dealerDrawButton) {
+  dealerDrawButton.addEventListener('click', addCardToDealer);
+}
+
+
 // Initializes deck with 52 cards
 function initializeDeck() {
   for (const n of numbers) {
@@ -87,8 +103,8 @@ function shuffleDeck() {
   }
 }
 
-// Implement later
-function addCardToDOM() {
+// Adds card to hand in DOM
+function addCardToHand() {
   const cardDrawn = deck.pop();
 
   const handElem = document.querySelector(".hand");
@@ -100,3 +116,15 @@ function addCardToDOM() {
   handElem.appendChild(cardElem);
 }
 
+//Adds card to dealer in DOM
+function addCardToDealer() {
+  const cardDrawn = deck.pop();
+
+  const dealerElem = document.querySelector(".dealer");
+
+  const cardElemString = `<div class="card face" style="--card-face:url('${cardDrawn.url}');"></div>`
+  const temp = document.createElement("div");
+  temp.innerHTML = cardElemString
+  const cardElem = temp.firstElementChild;
+  dealerElem.appendChild(cardElem);
+}
