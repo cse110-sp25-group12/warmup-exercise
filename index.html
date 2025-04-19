@@ -7,8 +7,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Blackjack Game</title>
-        <link rel="stylesheet" href="../style/main.css">
-    </head>
+        <link rel="stylesheet" href="style/main.css">
+      </head>
 
     <body>
         <header>
@@ -16,69 +16,79 @@
         </header>
 
         <main>
-            
-
-
             <div class="dealer">
                 <div
   class="card face"
   style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
+  ></div>
+  <div
+    class="card face"
+    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+  ></div>
+  <div
+    class="card face"
+    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+   ></div>
+   <div
+    class="card face"
+    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+  ></div>
             </div>
+
             <div class="table-divider">
                 DEALER MUST DRAW TO 16 and STAND ON ALL 17s
             </div>
+
             <div class="hand">
                 <div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
+    class="card face"
+    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+  ></div>
+  <div
+    class="card face"
+    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+  ></div>
+  <div
+    class="card face"
+    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+  ></div>
+  <div
+    class="card face"
+    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+  ></div>
+  <div
+    class="card face"
+    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+  ></div>
+  <div
+    class="card face"
+    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+  ></div>
+  <div
+    class="card face"
+    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
+  ></div>
+  </div>
+
+            <div class="controls">
+
+<button id="start-button" class="button">Start Game</button>
+<button id="hit-button" class="button">Hit</button>
+<button id="stand-button" class="button">Stand</button>
+<button id="restart-button" class="button">Restart</button>
 
             </div>
-            
 
         </main>
 
         <footer>
             
         </footer>
-        
-    </body>
 
+        <audio id="shuffle-sound" src="../sounds/Shuffle.mp3"></audio>
+        <audio id="draw-sound" src="../sounds/Draw.mp3"></audio>
+        
+        <script src="scripts/components.js"></script>
+
+    </body>
 </html>
