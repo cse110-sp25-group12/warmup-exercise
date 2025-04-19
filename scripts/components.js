@@ -56,8 +56,7 @@
 
 // - Register all components with customElements.define()
 
-// Card Deck Web Components with API Integration - Simplified Version
-
+// Card Deck Web Components with API Integration
 // PlayingCard Component - Handles individual cards and flip animation
 class PlayingCard extends HTMLElement {
     constructor() {
@@ -225,6 +224,34 @@ class CardDeck extends HTMLElement {
     }
 }
 
-// Register just the essential custom elements
+// Register components
 customElements.define('playing-card', PlayingCard);
 customElements.define('card-deck', CardDeck);
+
+// JStester implementation
+const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+const numbers = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
+const deck = [];
+
+// Initializes deck with 52 cards
+function initializeDeck() {
+  for (const n of numbers) {
+    for (const s of suits) {
+      const cardObject = {
+        number: n,
+        suit: s,
+        string: `${n} of ${s}`,
+        url: n === '10' ? `https://deckofcardsapi.com/static/img/${n[1]}${s[0]}.svg` : `https://deckofcardsapi.com/static/img/${n[0]}${s[0]}.svg`
+      };
+      deck.push(cardObject);
+    }
+  }
+}
+
+function shuffleDeck() {
+  // Implementation from JStester branch
+}
+
+function addCardToDOM() {
+  // Implementation from JStester branch
+}
