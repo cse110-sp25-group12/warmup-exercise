@@ -30,8 +30,12 @@ class DeckOfCardsAPI {
     }
   }
 
-  async shuffleDeck(remainingOnly = false) {
+  async shuffleDeck(remainingOnly = true) {
+    console.log('DeckOfCardsAPI.shuffleDeck called with remainingOnly =', remainingOnly);
+    console.log('Current deck ID:', this.deckId);
+    
     if (!this.deckId) {
+      console.error('No deck available to shuffle');
       throw new Error('No deck available to shuffle');
     }
 
@@ -40,16 +44,20 @@ class DeckOfCardsAPI {
         `${this.baseUrl}/${this.deckId}/shuffle/?remaining=true` : 
         `${this.baseUrl}/${this.deckId}/shuffle/`;
       
+      console.log('Making API request to:', endpoint);
       const response = await fetch(endpoint);
       const data = await response.json();
+      console.log('API shuffle response:', data);
       
       if (data.success) {
         this.remaining = data.remaining;
+        console.log('Shuffle successful, remaining cards:', this.remaining);
         return {
           deckId: data.deck_id,
           remaining: data.remaining
         };
       } else {
+        console.error('API returned error on shuffle:', data);
         throw new Error('Failed to shuffle the deck');
       }
     } catch (error) {
@@ -462,36 +470,55 @@ class CardDeck extends HTMLElement {
     this.render();
     
     // Add event listener for shuffle button
-    this.shadowRoot.querySelector('.shuffle-button')
-      .addEventListener('click', () => this.handleShuffleRequest());
+    const shuffleButton = this.shadowRoot.querySelector('.shuffle-button');
+    console.log('Found shuffle button?', !!shuffleButton);
+    
+    if (shuffleButton) {
+      console.log('Adding click event listener to shuffle button');
+      shuffleButton.addEventListener('click', (e) => {
+        console.log('Shuffle button clicked');
+        this.handleShuffleRequest();
+      });
+    } else {
+      console.error('Shuffle button not found in shadowRoot');
+    }
   }
   
   async createDeck() {
     try {
+      console.log('CardDeck.createDeck called');
       console.log('Creating new deck...');
       const result = await this.api.createNewDeck(true); // Create shuffled deck
+      console.log('Deck creation result:', result);
       this.deckId = result.deckId;
       this.remaining = result.remaining;
       console.log('Deck created:', { deckId: this.deckId, remaining: this.remaining });
+      return result;
     } catch (error) {
       console.error('Failed to create deck:', error);
+      throw error;
     }
   }
   
   async handleShuffleRequest() {
+    console.log('handleShuffleRequest called');
+    
     if (this.animationState.isInAnimation()) {
+      console.log('Animation in progress, ignoring shuffle request');
       return; // Don't allow shuffling while animation is in progress
     }
     
     try {
+      console.log('Starting shuffle animation');
       this.animationState.startAnimation();
       this.showShufflingAnimation();
       
       // Play shuffle sound
       const shuffleSound = document.getElementById('shuffle-sound');
+      console.log('Found shuffle sound element?', !!shuffleSound);
       if (shuffleSound) {
         shuffleSound.currentTime = 0;
-        shuffleSound.play();
+        shuffleSound.play().catch(e => console.error('Error playing shuffle sound:', e));
       }
       
       // Add shuffling class to deck
@@ -501,9 +528,9 @@ class CardDeck extends HTMLElement {
       // Create some flying cards for a more dramatic effect
       this.createFlyingCards();
       
-      // Wait for animation, then perform the actual shuffle
+      // Wait for animation, then create a new deck instead of shuffling
       setTimeout(async () => {
-        await this.api.shuffleDeck();
+        await this.createDeck(); // Create a completely new deck instead of shuffling
         
         // Dispatch event
         this.dispatchEvent(new CustomEvent('deck-shuffled', {
@@ -721,38 +748,12 @@ class CardDeck extends HTMLElement {
         font-family: var(--system-ui);
         box-shadow: 0 2px 5px rgba(0,0,0,0.3);
       }
-      
-      .shuffle-button {
-        padding: 1vh 2vw;
-        background-color: #085c25; 
-        color: rgb(255, 217, 0); 
-        font-family: "Casino", sans-serif;
-        font-size: 1.2rem;
-        border: 0.15vw solid rgb(255, 217, 0);
-        border-radius: 0.75rem;
-        cursor: pointer;
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
-        transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-      }
-      
-      .shuffle-button:hover {
-        background-color: #0a7c30;
-        transform: scale(1.05);
-        box-shadow: 0px 6px 15px rgba(0,0,0,0.6), 0px 0px 15px rgba(255,215,0,0.4);
-      }
-      
-      .shuffle-button:active {
-        background-color: #064d1a;
-        transform: scale(0.98);
-        box-shadow: 0px 2px 5px rgba(0,0,0,0.4);
-      }
     `;
     
     this.shadowRoot.innerHTML = `
       <style>${styles}</style>
       <div class="card-deck">
         <div class="deck"></div>
-        <button class="shuffle-button">Shuffle</button>
       </div>
     `;
   }
@@ -851,10 +852,26 @@ class CardGameController {
   
   async initialize() {
     // Set up card deck
+    console.log('CardGameController initializing...');
     this.deck = document.querySelector('card-deck');
+    console.log('Found card-deck element?', !!this.deck);
+    
     if (!this.deck) {
+      console.log('Creating new card-deck element');
       this.deck = document.createElement('card-deck');
-      document.querySelector('.deck').appendChild(this.deck);
+      // Properly append the card-deck to the card-shoe container
+      const cardShoeDiv = document.querySelector('.card-shoe');
+      console.log('Found card-shoe element?', !!cardShoeDiv);
+      
+      if (cardShoeDiv) {
+        // Clear existing content
+        cardShoeDiv.innerHTML = '';
+        // Add card-deck element
+        cardShoeDiv.appendChild(this.deck);
+        console.log('Appended card-deck to card-shoe');
+      } else {
+        console.error("Couldn't find .card-shoe element");
+      }
     }
     
     // Set up player and dealer hands
@@ -1028,78 +1045,22 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const game = new CardGameController();
   game.initialize();
-});
-
-// Legacy code below, keeping for compatibility
-const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
-const numbers = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
-const deck = [];
-
-// Initializes deck with 52 cards
-function initializeDeck() {
-  for (const n of numbers) {
-    for (const s of suits) {
-      const cardObject = {
-        number: n,
-        suit: s,
-        string: `${n} of ${s}`,
-        url: n === '10' ? `https://deckofcardsapi.com/static/img/${n[1]}${s[0]}.svg` : `https://deckofcardsapi.com/static/img/${n[0]}${s[0]}.svg`
-      };
-      deck.push(cardObject);
-    }
+  
+  // Add direct event listener for the shuffle button
+  const directShuffleButton = document.getElementById('direct-shuffle-button');
+  if (directShuffleButton) {
+    console.log('Found direct shuffle button, adding event listener');
+    directShuffleButton.addEventListener('click', () => {
+      console.log('Direct shuffle button clicked');
+      if (game.deck) {
+        console.log('Calling handleShuffleRequest directly');
+        game.deck.handleShuffleRequest();
+      } else {
+        console.error('No deck available for direct shuffle');
+      }
+    });
+  } else {
+    console.error('Direct shuffle button not found in DOM');
   }
-}
-
-// Shuffles a deck if deck already initialized
-function shuffleDeck() {
-  if (deck.length != 52) {
-    console.log('Error: deck has not been initialized yet');
-  }
-  else {
-    for (let i = deck.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-  }
-}
-
-// Implement later
-function addCardToDOM() {
-  const cardDrawn = deck.pop();
-
-  const handElem = document.querySelector(".hand");
-
-  const cardElemString = `<div class="card face" style="--card-face:url('${cardDrawn.url}');"></div>`
-  const temp = document.createElement("div");
-  temp.innerHTML = cardElemString
-  const cardElem = temp.firstElementChild;
-  handElem.appendChild(cardElem);
-}
-
-const shuffleSound = document.getElementById('shuffle-sound');
-const drawSound = document.getElementById('draw-sound');
-const palm = document.getElementById('palm');
-
-const startButton = document.getElementById('start-button');
-const hitButton = document.getElementById('hit-button');
-const standButton = document.getElementById('stand-button');
-
-
-startButton?.addEventListener('click', () => {
-  shuffleSound.currentTime = 0;
-  shuffleSound.play();
 });
 
-hitButton?.addEventListener('click', () => {
-  drawSound.currentTime = 0;
-  drawSound.play();
-});
-
-standButton?.addEventListener('click', () => {
-  console.log('Player chose to Stand');
-  palm.classList.add('palm-visible');
-
-  setTimeout(() => {
-    palm.classList.remove('palm-visible');
-  }, 2000);
-});
