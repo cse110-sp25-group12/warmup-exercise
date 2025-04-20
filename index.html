@@ -28,11 +28,11 @@
 
 
 
-          <div class="dealer">
+          <div class="dealer" style="margin-top: 20px;">
             <!-- cards spawn here; first card flipped over -->
           </div>
 
-          <div class="table-divider">
+          <div class="table-divider" style="position: relative; left: -39%;">
               DEALER MUST DRAW TO 16 and STAND ON ALL 17s
           </div>
 
@@ -40,7 +40,7 @@
               <!-- spawn cards here -->
           </div>
 
-            
+
 
         </main>
 
@@ -48,16 +48,17 @@
           <div class="controls">
             
             
-            <button id="hit-button" class="button">Hit</button>
-            <button id="stand-button" class="button">Stand</button>
+            <button id="hit-button" class="button" style="position: relative; left: 30%;">Hit</button>
+            <button id="stand-button" class="button" style="position: relative; left: -30%;">Stand</button>
             
             </div>
         </footer> 
-      <img id="palm" src="assets/images/palm.png" alt="Palm Hand">
+      <img id="palm" src="assets/palm.png" alt="Palm Hand">
 
 
-      <audio id="shuffle-sound" src="../sounds/Shuffle.mp3"></audio>
-      <audio id="draw-sound" src="../sounds/Draw.mp3"></audio>
+      <audio id="shuffle-sound" src="sounds/Shuffle.MP3"></audio>
+      <audio id="shuffle-sound-2" src="sounds/Shuffle.MP3" preload="auto"></audio>
+      <audio id="draw-sound" src="sounds/Draw.MP3"></audio>
             
       <script src="scripts/components.js"></script>
 
