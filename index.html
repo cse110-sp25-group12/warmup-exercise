@@ -13,78 +13,36 @@
     <body>
         <header>
             Blackjack
-            <button id="restart-button" class="button " style="position: absolute; left: 0; margin-inline-start: 1vw; font-size: 1rem; padding: 0.75vh 1vw; top: 0.75vh; background-color: rbg(0, 0, 0, 0.5);">Restart</button>
+            <button id="restart-button" class="button " style="position: absolute; left: 0; margin-inline-start: 1vw; font-size: 1rem; padding: 0.75vh 1vw; top: 0.75vh; background-color: rbg(0, 0, 0, 0.5); width: auto;">Restart</button>
         </header>
 
         <main>
-            <!-- Shuffling container here -->
-            <div class="shuffling-container"></div>
+          <!-- Shuffling container here -->
+          <div class="shuffling-container"></div>
 
-            <!-- Possible card shoe here -->
-            <div class="card-shoe">
-                <div class="deck"></div>
-            </div>
-
-
+          <!-- Possible card shoe here -->
+          <div class="card-shoe">
+              <div class="deck"></div>
+          </div>
 
 
-            <div class="dealer">
-                <div
-  class="card face"
-  style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-  ></div>
-  <div
-    class="card face"
-    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-  ></div>
-  <div
-    class="card face"
-    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-></div>
-<div
-    class="card face"
-    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-  ></div>
-            </div>
 
-            <div class="table-divider">
-                DEALER MUST DRAW TO 16 and STAND ON ALL 17s
-            </div>
 
-            <div class="hand" style="margin-bottom: 12.5vh;">
-                <div
-    class="card face"
-    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-  ></div>
-  <div
-    class="card face"
-    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-  ></div>
-  <div
-    class="card face"
-    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-  ></div>
-  <div
-    class="card face"
-    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-  ></div>
-  <div
-    class="card face"
-    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-  ></div>
-  <div
-    class="card face"
-    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-  ></div>
-  <div
-    class="card face"
-    style="--card-face:url('https://deckofcardsapi.com/static/img/AS.svg');"
-  ></div>
-  </div>
+          <div class="dealer">
+            <!-- cards spawn here; first card flipped over -->
+          </div>
+
+          <div class="table-divider">
+              DEALER MUST DRAW TO 16 and STAND ON ALL 17s
+          </div>
+
+          <div class="hand" >
+              <!-- spawn cards here -->
+          </div>
 
             
 
-</main>
+        </main>
 
         <footer>
           <div class="controls">
@@ -94,14 +52,14 @@
             <button id="stand-button" class="button">Stand</button>
             
             </div>
-        </footer>
-<img id="palm" src="assets/images/palm.png" alt="Palm Hand">
+        </footer> 
+      <img id="palm" src="assets/images/palm.png" alt="Palm Hand">
 
 
-  <audio id="shuffle-sound" src="../sounds/Shuffle.mp3"></audio>
-  <audio id="draw-sound" src="../sounds/Draw.mp3"></audio>
-        
-  <script src="scripts/components.js"></script>
+      <audio id="shuffle-sound" src="../sounds/Shuffle.mp3"></audio>
+      <audio id="draw-sound" src="../sounds/Draw.mp3"></audio>
+            
+      <script src="scripts/components.js"></script>
 
     </body>
 </html>
