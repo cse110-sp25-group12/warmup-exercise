@@ -102,6 +102,7 @@ function addCardToDOM() {
 
 const shuffleSound = document.getElementById('shuffle-sound');
 const drawSound = document.getElementById('draw-sound');
+const palm = document.getElementById('palm');
 
 const startButton = document.getElementById('start-button');
 const hitButton = document.getElementById('hit-button');
@@ -120,4 +121,9 @@ hitButton.addEventListener('click', () => {
 
 standButton.addEventListener('click', () => {
   console.log('Player chose to Stand');
+  palm.classList.add('palm-visible');
+
+  setTimeout(() => {
+    palm.classList.remove('palm-visible');
+  }, 2000);
 });
