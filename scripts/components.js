@@ -127,12 +127,25 @@ class DeckOfCardsAPI {
       
       if (data.success) {
         this.remaining = data.remaining;
+        
+        // Make sure the response includes cards
+        if (!data.cards || data.cards.length === 0) {
+          console.warn('API returned success but no cards');
+          // If we've run out of cards, create a new deck
+          if (data.remaining === 0) {
+            console.log('Deck is empty, creating a new shuffled deck');
+            await this.createNewDeck(true);
+            return this.drawCards(count);
+          }
+        }
+        
         return {
-          cards: data.cards,
+          cards: data.cards || [],
           remaining: data.remaining
         };
       } else {
-        throw new Error('Failed to draw cards');
+        console.error('API returned error:', data);
+        throw new Error('Failed to draw cards: ' + (data.error || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error drawing cards:', error);
@@ -162,6 +175,10 @@ class AnimationStateManager {
 
 // 1. PlayingCard Component
 class PlayingCard extends HTMLElement {
+  static get observedAttributes() {
+    return ['suit', 'value', 'code', 'image', 'face-up'];
+  }
+
   constructor() {
     super();
     
@@ -169,11 +186,42 @@ class PlayingCard extends HTMLElement {
     this.suit = this.getAttribute('suit') || 'Hearts';
     this.value = this.getAttribute('value') || 'A';
     this.code = this.getAttribute('code') || 'AH';
-    this.imageUrl = this.getAttribute('image') || `https://deckofcardsapi.com/static/img/${this.code}.png`;
+    this.imageUrl = this.getAttribute('image') || 
+                    `https://deckofcardsapi.com/static/img/${this.code}.png`;
     this.isFaceUp = this.hasAttribute('face-up') || false;
     
     // Create shadow DOM
     this.attachShadow({ mode: 'open' });
+  }
+  
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;
+    
+    if (name === 'suit') this.suit = newValue;
+    if (name === 'value') this.value = newValue;
+    if (name === 'code') this.code = newValue;
+    if (name === 'image') {
+      this.imageUrl = newValue || `https://deckofcardsapi.com/static/img/${this.code}.png`;
+      // Update card face if already rendered
+      const cardFace = this.shadowRoot?.querySelector('.card-face');
+      if (cardFace) {
+        cardFace.style.backgroundImage = `url('${this.imageUrl}')`;
+      }
+    }
+    if (name === 'face-up') {
+      const wasFlipped = this.isFaceUp;
+      this.isFaceUp = newValue !== null;
+      if (wasFlipped !== this.isFaceUp) {
+        const card = this.shadowRoot?.querySelector('.card');
+        if (card) {
+          if (this.isFaceUp) {
+            card.classList.add('flipped');
+          } else {
+            card.classList.remove('flipped');
+          }
+        }
+      }
+    }
   }
   
   connectedCallback() {
@@ -202,6 +250,11 @@ class PlayingCard extends HTMLElement {
   
   setFaceUp(faceUp) {
     if (this.isFaceUp !== faceUp) {
+      if (faceUp) {
+        this.setAttribute('face-up', '');
+      } else {
+        this.removeAttribute('face-up');
+      }
       this.flip();
     }
   }
@@ -454,12 +507,15 @@ class CardDeck extends HTMLElement {
     this.cards = [];
     this.api = new DeckOfCardsAPI();
     this.animationState = new AnimationStateManager();
+    this.deckId = null;
+    this.remaining = 0;
     
     // Create shadow DOM
     this.attachShadow({ mode: 'open' });
   }
   
   async connectedCallback() {
+    console.log('CardDeck connected to DOM');
     await this.createDeck();
     this.render();
     
@@ -470,9 +526,11 @@ class CardDeck extends HTMLElement {
   
   async createDeck() {
     try {
-      const result = await this.api.createNewDeck(false); // Create unshuffled deck
+      console.log('Creating new deck...');
+      const result = await this.api.createNewDeck(true); // Create shuffled deck
       this.deckId = result.deckId;
       this.remaining = result.remaining;
+      console.log('Deck created:', { deckId: this.deckId, remaining: this.remaining });
     } catch (error) {
       console.error('Failed to create deck:', error);
     }
@@ -552,13 +610,29 @@ class CardDeck extends HTMLElement {
     
     try {
       const result = await this.api.drawCards(count);
+      console.log('API response for draw cards:', result);
+      
       if (result.cards && result.cards.length > 0) {
         result.cards.forEach(cardData => {
+          console.log('Card data from API:', cardData);
+          
           const cardElement = document.createElement('playing-card');
-          cardElement.setAttribute('suit', cardData.suit);
+          
+          // Make sure to convert suit and value correctly
+          // API returns uppercase suit, convert to proper case
+          const suit = cardData.suit.charAt(0) + cardData.suit.slice(1).toLowerCase();
+          
+          cardElement.setAttribute('suit', suit);
           cardElement.setAttribute('value', cardData.value);
           cardElement.setAttribute('code', cardData.code);
           cardElement.setAttribute('image', cardData.image);
+          
+          console.log('Creating card with attributes:', {
+            suit,
+            value: cardData.value,
+            code: cardData.code,
+            image: cardData.image
+          });
           
           if (faceUp) {
             cardElement.setAttribute('face-up', '');
@@ -568,7 +642,9 @@ class CardDeck extends HTMLElement {
           
           // Add drawing animation
           setTimeout(() => {
-            cardElement.addDrawingClass();
+            if (cardElement.addDrawingClass) {
+              cardElement.addDrawingClass();
+            }
           }, 10);
         });
         
@@ -685,7 +761,12 @@ class CardHand extends HTMLElement {
   addCard(cardData, faceUp = true) {
     // Create and add a new playing card
     const card = document.createElement('playing-card');
-    card.setAttribute('suit', cardData.suit);
+    
+    // Make sure to convert suit and value correctly
+    // API returns uppercase suit, convert to proper case
+    const suit = cardData.suit.charAt(0) + cardData.suit.slice(1).toLowerCase();
+    
+    card.setAttribute('suit', suit);
     card.setAttribute('value', cardData.value);
     card.setAttribute('code', cardData.code);
     card.setAttribute('image', cardData.image);
@@ -699,7 +780,9 @@ class CardHand extends HTMLElement {
     
     // Add drawing animation
     setTimeout(() => {
-      card.addDrawingClass();
+      if (card.addDrawingClass) {
+        card.addDrawingClass();
+      }
     }, 10);
     
     return card;
@@ -808,16 +891,25 @@ class CardGameController {
   
   async dealInitialCards() {
     try {
+      console.log("Starting initial deal...");
+      
       // Deal 2 cards to player (face up)
-      await this.deck.drawToHand(this.playerHand, 2, true);
+      console.log("Dealing cards to player...");
+      const playerCards = await this.deck.drawToHand(this.playerHand, 2, true);
+      console.log("Player cards dealt:", playerCards);
       
       // Deal 2 cards to dealer (1 face down, 1 face up)
+      console.log("Dealing cards to dealer...");
       const dealerCards = await this.deck.drawToHand(this.dealerHand, 2, false);
+      console.log("Dealer cards dealt:", dealerCards);
       
       // Flip the second dealer card
       const dealerCardElements = this.dealerHand.querySelectorAll('playing-card');
+      console.log("Dealer card elements:", dealerCardElements);
+      
       if (dealerCardElements.length >= 2) {
         setTimeout(() => {
+          console.log("Flipping second dealer card to face up");
           dealerCardElements[1].setFaceUp(true);
         }, 500);
       }
@@ -827,13 +919,26 @@ class CardGameController {
   }
   
   async handleHit() {
+    console.log('Hit button clicked. Game state:', this.gameState);
+    
     if (!this.gameState.isPlayerTurn || this.gameState.isGameOver) {
+      console.log('Cannot hit: Player turn is over or game is over');
       return;
     }
     
     try {
+      // Play draw sound
+      const drawSound = document.getElementById('draw-sound');
+      if (drawSound) {
+        drawSound.currentTime = 0;
+        drawSound.play();
+      }
+      
+      console.log('Drawing a card for the player...');
+      
       // Draw a card for the player
-      await this.deck.drawToHand(this.playerHand, 1, true);
+      const cardResult = await this.deck.drawToHand(this.playerHand, 1, true);
+      console.log('Card drawn result:', cardResult);
       
       // Check if player has bust (would need card value calculation in a real game)
       // For now, we'll just continue
@@ -895,6 +1000,18 @@ customElements.define('card-hand', CardHand);
 
 // Initialize the game on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
+  // Fix sound paths if needed
+  const shuffleSound = document.getElementById('shuffle-sound');
+  const drawSound = document.getElementById('draw-sound');
+  
+  if (shuffleSound && shuffleSound.src.includes('../sounds/')) {
+    shuffleSound.src = shuffleSound.src.replace('../sounds/', 'sounds/');
+  }
+  
+  if (drawSound && drawSound.src.includes('../sounds/')) {
+    drawSound.src = drawSound.src.replace('../sounds/', 'sounds/');
+  }
+  
   const game = new CardGameController();
   game.initialize();
 });
