@@ -49,8 +49,8 @@ header{
 .table-divider{
     /* position: relative;*/
     /* top: 50%; */
-    /* left: 50%; */
-    /* transform: translate(-50%, -50%); */
+    /* left: 50%;
+    transform: translate(-50%, -50%); */
     /*width: max-content;
     background-color: var(--bj-yel);
     color: black;
@@ -195,7 +195,8 @@ main {
     padding-inline: 2vw;
     padding-top: 0.5vh;
     border: 0.15vw solid black;
-    margin: 1% auto;
+    margin: 1% auto 1% 60%;
+    transform: translateX(0.5vw);
 }
 .hand,
 .dealer{
@@ -219,6 +220,10 @@ main {
     padding-block: 1vh;   
 }
 
+/* Specific styling for dealer cards */
+.dealer {
+    margin-top: 20px; /* Add space above dealer cards */
+}
 
 .card.face,
 .card.back{
@@ -366,26 +371,50 @@ main {
 }
 .shuffling-container {
     position: fixed;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 100;
+    width: 30vw;
+    height: 20vw;
+    z-index: 1000;
     display: none;
+    opacity: 1;
+    transition: opacity 0.3s ease;
 }
 .shuffling-card {
     position: absolute;
-    width: var(--card-width);
-    height: var(--card-height);
-    background: url('https://deckofcardsapi.com/static/img/back.png') center/cover; /* Need the new url for the photo of the back of the card */
-    border-radius: var(--card-border-radius);
-    animation:
-        shuffleCard 0.8s ease-in-out infinite,
-        float 1s ease-in-out infinite alternate;
-    box-shadow: 0 0.3vw 0.5vw rgba(0,0,0,0.3);
+    width: var(--card-width, 12vw);
+    height: var(--card-height, calc(12vw * 1.4));
+    background-color: white;
+    background-size: cover;
+    background-position: center;
+    border-radius: var(--card-border-radius, 1vw);
+    border: var(--card-border, 0.25vw solid #000000);
+    box-shadow: 0 0.3vw 0.3vw rgba(0,0,0,0.5);
+    animation: shuffleFloating 1.5s ease-in-out infinite;
+    transform-origin: center;
 }
-@keyframes float {
-    from { transform: translateY(0); }
-    to { transform: translateY(-1vw); }
+@keyframes shuffleFloating {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        box-shadow: 0 0.3vw 0.3vw rgba(0,0,0,0.5);
+    }
+    25% {
+        transform: translateY(-100px) rotate(15deg) scale(1.1);
+        box-shadow: 0 1vw 1vw rgba(0,0,0,0.4);
+    }
+    50% {
+        transform: translateY(0) rotate(-10deg) scale(0.95);
+        box-shadow: 0 0.5vw 0.5vw rgba(0,0,0,0.5);
+    }
+    75% {
+        transform: translateY(-50px) rotate(5deg) scale(1.05);
+        box-shadow: 0 0.8vw 0.8vw rgba(0,0,0,0.4);
+    }
+    100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        box-shadow: 0 0.3vw 0.3vw rgba(0,0,0,0.5);
+    }
 }
 
 /* The card draw animation */
@@ -425,7 +454,7 @@ main {
     align-items: center;
 }
 .card-back {
-    background: url('https://deckofcardsapi.com/static/img/back.png') center/cover; /* Need to update url to our own card back */
+    background: url('../card_design_images/card_back.jpg') center/cover; /* Updated to our own card back */
     transform: rotateY(0deg);
 }
 .card-face {
@@ -449,13 +478,46 @@ main {
 .deck {
     width: var(--card-width);
     height: var(--card-height);
-    background: url('https://deckofcardsapi.com/static/img/back.png') center/cover; /* Need to update to our own card back */
+    background: url('../card_design_images/card_back.jpg') center/cover; /* Updated to our own card back */
     border-radius: var(--card-border-radius);
     border: var(--card-border);
-    box-shadow:
-        0 0.5vw 0.5vw rgba(0,0,0,0.3);
+    box-shadow: 
+        0 0.5vw 0.5vw rgba(0,0,0,0.3),
         0 0 0 0.3vw rgba(255,255,255,0.1),
         0 0 0 0.6vw rgba(0,0,0,0.1);
     transform: rotate(-5deg);
 }
+
+/* Add this before the shuffling container CSS */
+.flying-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 112px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  border: 2px solid black;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+  z-index: 1000;
+  opacity: 0;
+  animation: flyCard 2s ease-out forwards;
+  transform-origin: center;
+}
+
+@keyframes flyCard {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(0.3);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--fly-x)), calc(-50% + var(--fly-y))) rotate(var(--rotate)) scale(1);
+    opacity: 0;
+  }
+}
+/* End of added CSS */
 

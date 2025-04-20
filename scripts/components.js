@@ -286,7 +286,7 @@ class PlayingCard extends HTMLElement {
       }
       
       .card-back {
-        background: url('https://deckofcardsapi.com/static/img/back.png') center/cover;
+        background: url('card_design_images/card_back.jpg') center/cover;
         transform: rotateY(0deg);
       }
       
@@ -441,7 +441,7 @@ class CardShoe extends HTMLElement {
       .deck {
         width: var(--card-width, 12vw);
         height: var(--card-height, calc(12vw * 1.4));
-        background: url('https://deckofcardsapi.com/static/img/back.png') center/cover;
+        background: url('card_design_images/card_back.jpg') center/cover;
         border-radius: var(--card-border-radius, 1vw);
         border: var(--card-border, 0.25vw solid #000000);
         box-shadow: 0 0.5vw 0.5vw rgba(0,0,0,0.3);
@@ -556,6 +556,9 @@ class CardDeck extends HTMLElement {
       const deck = this.shadowRoot.querySelector('.deck');
       deck.classList.add('shuffling');
       
+      // Create some flying cards for a more dramatic effect
+      this.createFlyingCards();
+      
       // Wait for animation, then perform the actual shuffle
       setTimeout(async () => {
         await this.api.shuffleDeck();
@@ -576,30 +579,83 @@ class CardDeck extends HTMLElement {
     }
   }
   
+  createFlyingCards() {
+    // Create flying cards that scatter from the deck
+    const body = document.body;
+    
+    for (let i = 0; i < 10; i++) {
+      const flyingCard = document.createElement('div');
+      flyingCard.className = 'flying-card';
+      
+      // Random position, rotation and delay
+      const randomX = Math.random() * 60 - 30; // -30 to 30
+      const randomY = Math.random() * 40 - 20; // -20 to 20
+      const randomRotate = Math.random() * 360; // 0 to 360
+      const randomDelay = Math.random() * 0.5; // 0 to 0.5
+      
+      flyingCard.style.setProperty('--fly-x', `${randomX}vw`);
+      flyingCard.style.setProperty('--fly-y', `${randomY}vh`);
+      flyingCard.style.setProperty('--rotate', `${randomRotate}deg`);
+      flyingCard.style.animationDelay = `${randomDelay}s`;
+      
+      // Add card back image
+      flyingCard.style.backgroundImage = "url('card_design_images/card_back.jpg')";
+      
+      body.appendChild(flyingCard);
+      
+      // Remove the card after animation
+      setTimeout(() => {
+        flyingCard.remove();
+      }, 2000);
+    }
+  }
+  
   showShufflingAnimation() {
     const shufflingContainer = document.querySelector('.shuffling-container');
     if (shufflingContainer) {
       // Clear any existing cards
       shufflingContainer.innerHTML = '';
       
-      // Create 3 shuffling cards with different animation delays
-      for (let i = 0; i < 3; i++) {
+      // Create 5 shuffling cards with different animation delays
+      for (let i = 0; i < 5; i++) {
         const card = document.createElement('div');
         card.className = 'shuffling-card';
         card.style.zIndex = 10 + i;
-        card.style.animationDelay = `${i * 0.2}s`;
-        card.style.left = `${(i - 1) * 10}px`;
+        card.style.animationDelay = `${i * 0.15}s`;
+        card.style.left = `${(i - 2) * 15}px`;
+        // Add card back image
+        card.style.backgroundImage = "url('card_design_images/card_back.jpg')";
         shufflingContainer.appendChild(card);
       }
       
       shufflingContainer.style.display = 'block';
+      
+      // Add animation to the deck
+      const deck = this.shadowRoot.querySelector('.deck');
+      if (deck) {
+        deck.classList.add('shuffling-animation');
+      }
     }
   }
   
   hideShufflingAnimation() {
     const shufflingContainer = document.querySelector('.shuffling-container');
     if (shufflingContainer) {
-      shufflingContainer.style.display = 'none';
+      // Fade out animation
+      shufflingContainer.style.opacity = '0';
+      
+      // Wait for fade out and then hide
+      setTimeout(() => {
+        shufflingContainer.style.display = 'none';
+        shufflingContainer.style.opacity = '1';
+        shufflingContainer.innerHTML = ''; // Clean up the cards
+      }, 300);
+    }
+    
+    // Remove animation from the deck
+    const deck = this.shadowRoot.querySelector('.deck');
+    if (deck) {
+      deck.classList.remove('shuffling-animation');
     }
   }
   
@@ -672,16 +728,21 @@ class CardDeck extends HTMLElement {
       .deck {
         width: var(--card-width, 12vw);
         height: var(--card-height, calc(12vw * 1.4));
-        background: url('https://deckofcardsapi.com/static/img/back.png') center/cover;
+        background: url('card_design_images/card_back.jpg') center/cover;
         border-radius: var(--card-border-radius, 1vw);
         border: var(--card-border, 0.25vw solid #000000);
         box-shadow: 0 0.5vw 0.5vw rgba(0,0,0,0.3);
         position: relative;
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
       
       .deck.shuffling {
         animation: shuffleCard 0.5s ease-in-out infinite;
+      }
+      
+      .deck.shuffling-animation {
+        animation: shuffleDeck 1s ease-in-out infinite;
+        box-shadow: 0 0.8vw 1vw rgba(255,215,0,0.6);
       }
       
       @keyframes shuffleCard {
@@ -690,6 +751,15 @@ class CardDeck extends HTMLElement {
         50% { transform: translate(-5px, 5px) rotate(-5deg); }
         75% { transform: translate(5px, 5px) rotate(3deg); }
         100% { transform: translate(0, 0) rotate(0deg); }
+      }
+      
+      @keyframes shuffleDeck {
+        0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+        20% { transform: translate(-10px, -5px) rotate(-8deg) scale(1.05); }
+        40% { transform: translate(12px, 3px) rotate(10deg) scale(1.05); }
+        60% { transform: translate(-8px, 5px) rotate(-5deg) scale(1.02); }
+        80% { transform: translate(8px, -3px) rotate(5deg) scale(1.02); }
+        100% { transform: translate(0, 0) rotate(0deg) scale(1); }
       }
       
       .deck::after {
@@ -720,17 +790,19 @@ class CardDeck extends HTMLElement {
         border-radius: 0.75rem;
         cursor: pointer;
         box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
-        transition: background-color 0.3s, transform 0.2s;
+        transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
       }
       
       .shuffle-button:hover {
         background-color: #0a7c30;
         transform: scale(1.05);
+        box-shadow: 0px 6px 15px rgba(0,0,0,0.6), 0px 0px 15px rgba(255,215,0,0.4);
       }
       
       .shuffle-button:active {
         background-color: #064d1a;
         transform: scale(0.98);
+        box-shadow: 0px 2px 5px rgba(0,0,0,0.4);
       }
     `;
     
