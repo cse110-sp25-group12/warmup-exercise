@@ -100,3 +100,30 @@ function addCardToDOM() {
   handElem.appendChild(cardElem);
 }
 
+const shuffleSound = document.getElementById('shuffle-sound');
+const drawSound = document.getElementById('draw-sound');
+const palm = document.getElementById('palm');
+
+const startButton = document.getElementById('start-button');
+const hitButton = document.getElementById('hit-button');
+const standButton = document.getElementById('stand-button');
+
+
+startButton.addEventListener('click', () => {
+  shuffleSound.currentTime = 0;
+  shuffleSound.play();
+});
+
+hitButton.addEventListener('click', () => {
+  drawSound.currentTime = 0;
+  drawSound.play();
+});
+
+standButton.addEventListener('click', () => {
+  console.log('Player chose to Stand');
+  palm.classList.add('palm-visible');
+
+  setTimeout(() => {
+    palm.classList.remove('palm-visible');
+  }, 2000);
+});
