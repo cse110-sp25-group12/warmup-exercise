@@ -54,3 +54,76 @@
 
 // 5. Component Registration
 // - Register all components with customElements.define()
+
+const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+const numbers = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
+const deck = [];
+
+// Initializes deck with 52 cards
+function initializeDeck() {
+  for (const n of numbers) {
+    for (const s of suits) {
+      const cardObject = {
+        number: n,
+        suit: s,
+        string: `${n} of ${s}`,
+        url: n === '10' ? `https://deckofcardsapi.com/static/img/${n[1]}${s[0]}.svg` : `https://deckofcardsapi.com/static/img/${n[0]}${s[0]}.svg`
+      };
+      deck.push(cardObject);
+    }
+  }
+}
+
+// Shuffles a deck if deck already initialized
+function shuffleDeck() {
+  if (deck.length != 52) {
+    console.log('Error: deck has not been initialized yet');
+  }
+  else {
+    for (let i = deck.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+  }
+}
+
+// Implement later
+function addCardToDOM() {
+  const cardDrawn = deck.pop();
+
+  const handElem = document.querySelector(".hand");
+
+  const cardElemString = `<div class="card face" style="--card-face:url('${cardDrawn.url}');"></div>`
+  const temp = document.createElement("div");
+  temp.innerHTML = cardElemString
+  const cardElem = temp.firstElementChild;
+  handElem.appendChild(cardElem);
+}
+
+const shuffleSound = document.getElementById('shuffle-sound');
+const drawSound = document.getElementById('draw-sound');
+const palm = document.getElementById('palm');
+
+const startButton = document.getElementById('start-button');
+const hitButton = document.getElementById('hit-button');
+const standButton = document.getElementById('stand-button');
+
+
+startButton.addEventListener('click', () => {
+  shuffleSound.currentTime = 0;
+  shuffleSound.play();
+});
+
+hitButton.addEventListener('click', () => {
+  drawSound.currentTime = 0;
+  drawSound.play();
+});
+
+standButton.addEventListener('click', () => {
+  console.log('Player chose to Stand');
+  palm.classList.add('palm-visible');
+
+  setTimeout(() => {
+    palm.classList.remove('palm-visible');
+  }, 2000);
+});
