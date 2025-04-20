@@ -26,7 +26,7 @@
           </div>
 
           <!-- Direct shuffle button for testing -->
-          <button id="direct-shuffle-button" class="button" style="position: absolute; top: 44%; left: 8%; margin-top: 20px; z-index: 100;">Shuffle Deck</button>
+          <button id="direct-shuffle-button" class="button" style="position: absolute; top: 44%; left: 7%; margin-top: 20px; z-index: 100; display: flex; justify-content: center; align-items: center; text-align: center; min-width: 120px;">Shuffle</button>
 
           <div class="dealer" style="margin-top: 20px;">
             <!-- cards spawn here; first card flipped over -->
@@ -40,7 +40,8 @@
               <!-- spawn cards here -->
           </div>
 
-
+          <!-- Palm image positioned in the center of the screen -->
+          <img id="palm" src="assets/palm.png" alt="Palm Hand" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: auto; z-index: 9999; opacity: 0; visibility: hidden; transition: opacity 0.5s ease;">
 
         </main>
 
@@ -48,19 +49,19 @@
           <div class="controls">
             
             
-            <button id="hit-button" class="button" style="position: relative; left: 30%;">Hit</button>
-            <button id="stand-button" class="button" style="position: relative; left: -30%;">Stand</button>
+            <button id="hit-button" class="button" style="position: relative; left: 40%;">Hit</button>
+            <button id="deal-button" class="button" style="position: relative; left: 0%;">Deal</button>
+            <button id="stand-button" class="button" style="position: relative; left: -40%;">Stand</button>
             
+            <!-- Test button for palm (can be removed after testing) -->
             </div>
         </footer> 
-      <img id="palm" src="assets/palm.png" alt="Palm Hand">
-
 
       <audio id="shuffle-sound" src="sounds/Shuffle.MP3"></audio>
       <audio id="shuffle-sound-2" src="sounds/Shuffle.MP3" preload="auto"></audio>
       <audio id="draw-sound" src="sounds/Draw.MP3"></audio>
             
       <script src="scripts/components.js"></script>
-
+      <script src="scripts/palm.js"></script>
     </body>
 </html>

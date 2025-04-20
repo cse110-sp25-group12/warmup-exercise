@@ -493,6 +493,10 @@ class CardDeck extends HTMLElement {
       this.deckId = result.deckId;
       this.remaining = result.remaining;
       console.log('Deck created:', { deckId: this.deckId, remaining: this.remaining });
+      
+      // Update the UI counter
+      this.updateDeckCounter();
+      
       return result;
     } catch (error) {
       console.error('Failed to create deck:', error);
@@ -531,6 +535,9 @@ class CardDeck extends HTMLElement {
       // Wait for animation, then create a new deck instead of shuffling
       setTimeout(async () => {
         await this.createDeck(); // Create a completely new deck instead of shuffling
+        
+        // Update the UI counter
+        this.updateDeckCounter();
         
         // Dispatch event
         this.dispatchEvent(new CustomEvent('deck-shuffled', {
@@ -677,11 +684,25 @@ class CardDeck extends HTMLElement {
         this.remaining = result.remaining;
         this.render();
         
+        // Update any deck counter display in the UI
+        this.updateDeckCounter();
+        
         return result.cards;
       }
     } catch (error) {
       console.error('Error drawing cards to hand:', error);
       throw error;
+    }
+  }
+  
+  updateDeckCounter() {
+    // Find any visual deck elements that need updating
+    const deckElement = document.querySelector('.card-shoe .deck');
+    if (deckElement) {
+      // Update visual counter if needed
+      deckElement.setAttribute('data-count', this.remaining);
+      // If there's a counter showing in pseudo-element or other UI element
+      deckElement.style.setProperty('--count', this.remaining);
     }
   }
   
@@ -883,6 +904,18 @@ class CardGameController {
     document.getElementById('stand-button').addEventListener('click', () => this.handleStand());
     document.getElementById('restart-button').addEventListener('click', () => this.restartGame());
     
+    // Add event listener for the Deal button
+    const dealButton = document.getElementById('deal-button');
+    if (dealButton) {
+      console.log('Found deal button, adding event listener');
+      dealButton.addEventListener('click', () => {
+        console.log('Deal button clicked');
+        this.restartGame();
+      });
+    } else {
+      console.error('Deal button not found in DOM');
+    }
+    
     // Set up animation listeners
     document.addEventListener('deck-shuffled', () => this.onDeckShuffled());
     document.addEventListener('card-drawn', (e) => this.onCardDrawn(e.detail.card));
@@ -893,15 +926,11 @@ class CardGameController {
   
   async restartGame() {
     try {
+      console.log('Starting new game/deal');
+      
       // Clear hands
       this.playerHand.innerHTML = '';
       this.dealerHand.innerHTML = '';
-      
-      // Create a new deck
-      if (this.deck) {
-        await this.deck.createDeck();
-        await this.deck.handleShuffleRequest();
-      }
       
       // Reset game state
       this.gameState = {
@@ -911,10 +940,23 @@ class CardGameController {
         isGameOver: false
       };
       
+      // If we don't have a deck or cards are running low, create a new shuffled deck
+      if (!this.deck || !this.deck.deckId || this.deck.remaining < 15) {
+        console.log('Creating and shuffling a new deck');
+        if (this.deck) {
+          await this.deck.createDeck();
+          await this.deck.handleShuffleRequest();
+          
+          // Wait for shuffle animation
+          await new Promise(resolve => setTimeout(resolve, 1500));
+        }
+      } else {
+        console.log('Using existing deck with', this.deck.remaining, 'cards remaining');
+      }
+      
       // Deal initial cards
-      setTimeout(async () => {
-        await this.dealInitialCards();
-      }, 1500); // Wait for shuffle animation to complete
+      await this.dealInitialCards();
+      
     } catch (error) {
       console.error('Error restarting game:', error);
     }
@@ -979,11 +1021,40 @@ class CardGameController {
   }
   
   async handleStand() {
-    if (!this.gameState.isPlayerTurn || this.gameState.isGameOver) {
-      return;
-    }
+    console.log('Stand button clicked');
     
     try {
+      // Show the palm animation immediately, regardless of game state
+      const palm = document.getElementById('palm');
+      console.log('Found palm element?', !!palm);
+      
+      if (palm) {
+        // Direct style manipulation for maximum reliability
+        palm.style.opacity = "1";
+        palm.style.visibility = "visible";
+        console.log('Palm styles applied directly:', palm.style.opacity, palm.style.visibility);
+        
+        // Also add the class for good measure
+        palm.classList.add('palm-visible');
+        console.log('Palm-visible class added');
+        
+        // Remove the palm animation after a delay
+        setTimeout(() => {
+          palm.style.opacity = "0";
+          palm.style.visibility = "hidden";
+          palm.classList.remove('palm-visible');
+          console.log('Palm hidden');
+        }, 2000);
+      } else {
+        console.error('Palm element not found');
+      }
+      
+      // Only proceed with game logic if it's player's turn and game isn't over
+      if (!this.gameState.isPlayerTurn || this.gameState.isGameOver) {
+        console.log('Game actions skipped: Player turn is over or game is over');
+        return;
+      }
+      
       // End player's turn
       this.gameState.isPlayerTurn = false;
       
@@ -993,22 +1064,11 @@ class CardGameController {
         dealerCardElements[0].setFaceUp(true);
       }
       
-      // Dealer draws until reaching 17 (in a real game)
-      // For this example, we'll just draw one more card
-      setTimeout(async () => {
-        await this.deck.drawToHand(this.dealerHand, 1, true);
-        
-        // End the game
+      // End the game after the palm animation
+      setTimeout(() => {
         this.gameState.isGameOver = true;
-        
-        // Show the palm animation
-        const palm = document.getElementById('palm');
-        palm.classList.add('palm-visible');
-        
-        setTimeout(() => {
-          palm.classList.remove('palm-visible');
-        }, 2000);
-      }, 1000);
+      }, 2000);
+      
     } catch (error) {
       console.error('Error handling stand:', error);
     }
@@ -1045,6 +1105,13 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const game = new CardGameController();
   game.initialize();
+  
+  // Initialize deck counter display
+  setTimeout(() => {
+    if (game.deck) {
+      game.deck.updateDeckCounter();
+    }
+  }, 1000); // Give time for the deck to be created
   
   // Add direct event listener for the shuffle button
   const directShuffleButton = document.getElementById('direct-shuffle-button');

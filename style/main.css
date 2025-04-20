@@ -299,18 +299,20 @@ main {
 
 #palm {
     position: fixed;
-    bottom: -200px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: auto;
+    z-index: 9999;
     opacity: 0;
-    transition: bottom 0.8s ease, opacity 0.8s ease;
-    z-index: 1000;
+    visibility: hidden;
+    transition: opacity 0.5s ease;
 }
 
 .palm-visible {
-    bottom: 20vh;
-    opacity: 1;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
   .controls{
@@ -476,16 +478,32 @@ main {
     transform: translateY(-50); /*Center it vertically*/
 }
 .deck {
-    width: var(--card-width);
-    height: var(--card-height);
-    background: url('../card_design_images/card_back.jpg') center/cover; /* Updated to our own card back */
-    border-radius: var(--card-border-radius);
-    border: var(--card-border);
-    box-shadow: 
-        0 0.5vw 0.5vw rgba(0,0,0,0.3),
-        0 0 0 0.3vw rgba(255,255,255,0.1),
-        0 0 0 0.6vw rgba(0,0,0,0.1);
+    width: var(--card-width, 12vw);
+    height: var(--card-height, calc(12vw * 1.4));
+    background: url('../card_design_images/card_back.jpg') center/cover;
+    border-radius: var(--card-border-radius, 1vw);
+    border: var(--card-border, 0.25vw solid #000000);
+    box-shadow: 0 0.5vw 0.5vw rgba(0,0,0,0.3);
+    position: relative;
     transform: rotate(-5deg);
+}
+
+.card-shoe .deck::after {
+  content: attr(data-count);
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-family: var(--system-ui);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 /* Add this before the shuffling container CSS */
