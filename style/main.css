@@ -209,6 +209,13 @@ main {
     transition: all 0.2s ease-in-out;
     margin: 1rem auto;
     min-width: var(--card-width);
+    /* more responsive additions */
+    max-width: 90vw;
+    overflow-x: auto;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    gap: 0.5vw;
+    padding-block: 1vh;   
 }
 
 
@@ -338,4 +345,117 @@ main {
 .button:active {
     background-color: #064d1a; 
     transform: scale(0.98);
+
+    /* Added improvement for responsive */
+    min-width: 8vw;
+    white-space: nowrap;
+    padding: clamp(0.75rem, 1.5vh, 1.25rem) clamp(1.5rem, 3vw, 2.5rem);
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
 }
+.button:hover { background: var(--bj-yel); }
+
+
+
+/* The Shuffling Animation */
+@keyframes shuffleCard {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    25% { transform: translate(1vw, -1.5vw) rotate(15deg) scale(1.05); }
+    50% { transform: translate(-1vw, 1vw) rotate(-15deg) scale(1.1); }
+    75% { transform: translate(0.5vw, -0.5vw) rotate(5deg) scale(1.05); }
+    100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+}
+.shuffling-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    display: none;
+}
+.shuffling-card {
+    position: absolute;
+    width: var(--card-width);
+    height: var(--card-height);
+    background: url('https://deckofcardsapi.com/static/img/back.png') center/cover; /* Need the new url for the photo of the back of the card */
+    border-radius: var(--card-border-radius);
+    animation:
+        shuffleCard 0.8s ease-in-out infinite,
+        float 1s ease-in-out infinite alternate;
+    box-shadow: 0 0.3vw 0.5vw rgba(0,0,0,0.3);
+}
+@keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-1vw); }
+}
+
+/* The card draw animation */
+@keyframes drawCard {
+    0% {
+        transform: translate(-15vw, -10vw) rotate(-15deg) scale(0.8);
+        opacity: 0;
+        z-index: 20;
+    }
+    50% {
+        transform: translate(0, -2vw) rotate(5deg) scale(1.05);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0) rotate(0) scale(1);
+        z-index: 1;
+    }
+}
+.card-drawn {
+    animation: drawCard 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* The card flip animation */
+.card {
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+    position: relative;
+}
+.card-face, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: var(--card-border-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-back {
+    background: url('https://deckofcardsapi.com/static/img/back.png') center/cover; /* Need to update url to our own card back */
+    transform: rotateY(0deg);
+}
+.card-face {
+    background: white;
+    transform: rotateY(180deg);
+}
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+/* Card shoe place holder for current */
+.card-shoe {
+    position: absolute;
+    top: 25%;
+    left: 8%;
+    width: var(--card-width);
+    height: var(--card-height);
+    z-index: 10;
+    transform: translateY(-50); /*Center it vertically*/
+}
+.deck {
+    width: 100%;
+    height: 100%;
+    background: url('https://deckofcardsapi.com/static/img/back.png') center/cover; /* Need to update to our own card back */
+    border-radius: var(--card-border-radius);
+    border: var(--card-border);
+    box-shadow:
+        0 0.5vw 0.5vw rgba(0,0,0,0.3);
+        0 0 0 0.3vw rgba(255,255,255,0.1),
+        0 0 0 0.6vw rgba(0,0,0,0.1);
+    transform: rotate(-5deg);
+}
+
