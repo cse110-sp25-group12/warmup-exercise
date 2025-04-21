@@ -25,9 +25,6 @@
               <div class="deck"></div>
           </div>
 
-
-
-
           <div class="dealer" style="margin-top: 20px;">
             <!-- cards spawn here; first card flipped over -->
           </div>
@@ -40,27 +37,25 @@
               <!-- spawn cards here -->
           </div>
 
-
+          <!-- Palm image positioned in the center of the screen -->
+          <img id="palm" src="assets/palm.png" alt="Palm Hand" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: auto; z-index: 9999; opacity: 0; visibility: hidden; transition: opacity 0.5s ease;">
 
         </main>
 
         <footer>
           <div class="controls">
-            
-            
-            <button id="hit-button" class="button" style="position: relative; left: 30%;">Hit</button>
-            <button id="stand-button" class="button" style="position: relative; left: -30%;">Stand</button>
-            
-            </div>
+            <button id="direct-shuffle-button" class="button" style="position: relative; left: 55%;">Shuffle</button>
+            <button id="hit-button" class="button" style="position: relative; left: 25%;">Hit</button>
+            <button id="deal-button" class="button" style="position: relative; left: -25%;">Deal</button>
+            <button id="stand-button" class="button" style="position: relative; left: -55%;">Stand</button>
+          </div>
         </footer> 
-      <img id="palm" src="assets/palm.png" alt="Palm Hand">
-
 
       <audio id="shuffle-sound" src="sounds/Shuffle.MP3"></audio>
       <audio id="shuffle-sound-2" src="sounds/Shuffle.MP3" preload="auto"></audio>
       <audio id="draw-sound" src="sounds/Draw.MP3"></audio>
             
       <script src="scripts/components.js"></script>
-
+      <script src="scripts/palm.js"></script>
     </body>
 </html>
